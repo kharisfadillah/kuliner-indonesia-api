@@ -16,4 +16,4 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/kuliner-indonesia-api-e2e',
-};
+}
