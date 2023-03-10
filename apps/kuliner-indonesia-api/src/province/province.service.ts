@@ -1,7 +1,6 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
+import { ForbiddenException, Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
-import { CreateProvinceDto } from './dto'
-import { EditProvinceDto } from './dto/edit-province.dto'
+import { CreateProvinceDto, EditProvinceDto } from './dto'
 
 @Injectable()
 export class ProvinceService {
