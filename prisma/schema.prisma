@@ -11,21 +11,55 @@ datasource db {
 }
 
 model User {
-  id Int @id @default(autoincrement())
 
-  email String @unique
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  firstName String                    @map(name: "first_name")
+  lastName  String?                   @map(name: "last_name")
+  hash      String
+  createdAt DateTime  @default(now()) @map(name: "created_at")
+  updatedAt DateTime  @updatedAt      @map(name: "updated_at")
+  provincesCreated Province[] @relation("userCreated")
+  provincesUpdated Province[] @relation("userUpdated")
+  culinariesCreated Culinary[] @relation("userCreated")
+  culinariesUpdated Culinary[] @relation("userUpdated")
 
-  firstName String
-
-  lastName String?
-
-  hash String
-
-  createdAt DateTime @default(now())
-  
-  updatedAt DateTime @updatedAt
-  
   @@map("users")
+}
+
+model Province {
+
+  id Int @id @default(autoincrement())
+  name String @unique
+  createdId Int? @map(name: "created_id")
+  createdUser User? @relation("userCreated", fields: [createdId], references: [id])
+  updatedId Int? @map(name: "updated_id")
+  updatedUser User? @relation("userUpdated", fields: [updatedId], references: [id])
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  culinaries Culinary[]
+
+  @@map("provinces")
+
+}
+
+model Culinary {
+
+  id Int @id @default(autoincrement())
+  name String @unique
+  description String?
+  provinceId Int @map(name: "province_id")
+  province Province @relation(fields: [provinceId], references: [id])
+  createdId Int? @map(name: "created_id")
+  createdUser User? @relation("userCreated", fields: [createdId], references: [id])
+  updatedId Int? @map(name: "updated_id")
+  updatedUser User? @relation("userUpdated", fields: [updatedId], references: [id])
+  createdAt DateTime @default(now()) @map(name: "created_at")
+  updatedAt DateTime @updatedAt @map(name: "updated_at")
+
+  @@map("culinaries")
+
 }
 
 
