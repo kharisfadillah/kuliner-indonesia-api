@@ -38,7 +38,7 @@ describe('App e2e', () => {
     const dto: RegisterDto = {
       email: 'kharisf@gmail.com',
       password: '123456',
-      firstName: 'Kharis',
+      firstName: 'Kharisa',
       lastName: 'Fadillah',
     }
     describe('Register', () => {
