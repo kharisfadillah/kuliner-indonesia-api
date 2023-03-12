@@ -46,7 +46,7 @@ describe('App e2e', () => {
         return pactum
           .spec()
           .post('/auth/register')
-          .withBody({
+          .withJson({
             password: dto.password,
             firstName: dto.firstName,
           })
@@ -56,7 +56,7 @@ describe('App e2e', () => {
         return pactum
           .spec()
           .post('/auth/register')
-          .withBody({
+          .withJson({
             email: dto.email,
             firstName: dto.firstName,
           })
@@ -66,7 +66,7 @@ describe('App e2e', () => {
         return pactum
           .spec()
           .post('/auth/register')
-          .withBody({
+          .withJson({
             email: dto.email,
             password: dto.password,
           })
@@ -76,7 +76,7 @@ describe('App e2e', () => {
         return pactum.spec().post('/auth/register').expectStatus(400)
       })
       it('should register', () => {
-        return pactum.spec().post('/auth/register').withBody(dto).expectStatus(201)
+        return pactum.spec().post('/auth/register').withJson(dto).expectStatus(201)
       })
     })
 
@@ -85,7 +85,7 @@ describe('App e2e', () => {
         return pactum
           .spec()
           .post('/auth/login')
-          .withBody({
+          .withJson({
             password: dto.password,
           })
           .expectStatus(400)
@@ -94,7 +94,7 @@ describe('App e2e', () => {
         return pactum
           .spec()
           .post('/auth/login')
-          .withBody({
+          .withJson({
             email: dto.email,
           })
           .expectStatus(400)
@@ -106,7 +106,7 @@ describe('App e2e', () => {
         return pactum
           .spec()
           .post('/auth/login')
-          .withBody({
+          .withJson({
             email: dto.email,
             password: dto.password,
           })
@@ -141,7 +141,7 @@ describe('App e2e', () => {
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
           })
-          .withBody(dto)
+          .withJson(dto)
           .expectStatus(200)
           .expectBodyContains(dto.firstName)
           .expectBodyContains(dto.email)
@@ -174,7 +174,7 @@ describe('App e2e', () => {
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
           })
-          .withBody(dto)
+          .withJson(dto)
           .expectStatus(201)
           .stores('kalselProvinceId', 'id')
       })
@@ -191,7 +191,7 @@ describe('App e2e', () => {
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
           })
-          .withBody(dto)
+          .withJson(dto)
           .expectStatus(201)
           .stores('sulselProvinceId', 'id')
       })
@@ -250,7 +250,7 @@ describe('App e2e', () => {
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
           })
-          .withBody(dto)
+          .withJson(dto)
           .expectStatus(200)
           .expectBodyContains(dto.name)
       })
@@ -303,7 +303,7 @@ describe('App e2e', () => {
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
           })
-          .withBody({
+          .withJson({
             name: 'Soto Banjara',
             description: 'Soto Banjar adalah soto khas suku Banjar, Kalimantan Selatan',
             provinceId: '$S{kalselProvinceId}',
@@ -321,7 +321,7 @@ describe('App e2e', () => {
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
           })
-          .withBody({
+          .withJson({
             name: 'Ketupat Kandangan',
             description: 'Ketupat Kandangan merupakan kuliner khas daerah Kandangan, Kalimantan Selatan. ',
             provinceId: '$S{kalselProvinceId}',
@@ -381,7 +381,7 @@ describe('App e2e', () => {
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
           })
-          .withBody({
+          .withJson({
             name: 'Soto Banjar',
             description: 'Soto Banjar adalah soto khas suku Banjar, Kalimantan Selatan',
             provinceId: '$S{kalselProvinceId}',
