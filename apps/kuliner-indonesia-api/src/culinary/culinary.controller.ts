@@ -15,7 +15,9 @@ import { GetUser } from '../auth/decorator'
 import { JwtGuard } from '../auth/guard'
 import { CulinaryService } from './culinary.service'
 import { CreateCulinaryDto, EditCulinaryDto } from './dto'
+import { ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Culinary')
 @UseGuards(JwtGuard)
 @Controller('culinaries')
 export class CulinaryController {

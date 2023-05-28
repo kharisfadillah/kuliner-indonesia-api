@@ -16,7 +16,10 @@ import { JwtGuard } from '../auth/guard'
 import { CreateProvinceDto } from './dto'
 import { EditProvinceDto } from './dto/edit-province.dto'
 import { ProvinceService } from './province.service'
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Province')
+@ApiBearerAuth()
 @UseGuards(JwtGuard)
 @Controller('provinces')
 export class ProvinceController {

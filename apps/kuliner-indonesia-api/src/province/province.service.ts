@@ -33,11 +33,6 @@ export class ProvinceService {
   }
 
   async editProvince(updatedId: number, provinceId: number, dto: EditProvinceDto) {
-    const province = await this.prisma.province.findFirst({
-      where: {
-        id: provinceId,
-      },
-    })
     return this.prisma.province.update({
       where: {
         id: provinceId,

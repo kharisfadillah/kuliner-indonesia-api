@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common'
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateCulinaryDto, EditCulinaryDto } from './dto'
 
@@ -36,7 +36,7 @@ export class CulinaryService {
       },
     })
 
-    if (!province) throw new ForbiddenException('province not found')
+    if (!province) throw new NotFoundException('province not found')
 
     const culinary = await this.prisma.culinary.create({
       data: {
@@ -60,11 +60,6 @@ export class CulinaryService {
       if (!province) throw new ForbiddenException('province not found')
     }
 
-    const culinary = await this.prisma.culinary.findFirst({
-      where: {
-        id: culinaryId,
-      },
-    })
     return this.prisma.culinary.update({
       where: {
         id: culinaryId,
