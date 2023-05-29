@@ -12,6 +12,10 @@ export class EditCulinaryDto {
   @IsOptional()
   description: string
 
+  @IsString()
+  @IsOptional()
+  image: string
+
   @ApiPropertyOptional()
   @IsNumber()
   @IsOptional()

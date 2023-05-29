@@ -49,6 +49,7 @@ model Culinary {
   id Int @id @default(autoincrement())
   name String @unique
   description String?
+  image String?
   provinceId Int @map(name: "province_id")
   province Province @relation(fields: [provinceId], references: [id])
   createdId Int? @map(name: "created_id")

@@ -9,15 +9,21 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common'
 import { GetUser } from '../auth/decorator'
 import { JwtGuard } from '../auth/guard'
 import { CulinaryService } from './culinary.service'
 import { CreateCulinaryDto, EditCulinaryDto } from './dto'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
+import { FileInterceptor } from '@nestjs/platform-express'
+import { diskStorage } from 'multer'
+import { join } from 'path'
 
 @ApiTags('Culinary')
+@ApiBearerAuth()
 @UseGuards(JwtGuard)
 @Controller('culinaries')
 export class CulinaryController {
@@ -39,8 +45,25 @@ export class CulinaryController {
   }
 
   @Post()
-  createCulinary(@GetUser('id') createdId: number, @Body() dto: CreateCulinaryDto) {
-    console.log({ provinceId: dto.provinceId})
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: join(__dirname, 'images'),
+        filename: (req, file, cb) => {
+          const filename = `${Date.now()}-${file.originalname}`
+          cb(null, filename)
+        },
+      }),
+    }),
+  )
+  createCulinary(
+    @GetUser('id') createdId: number,
+    @Body() dto: CreateCulinaryDto,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
+    console.log(image)
+    dto.image = image.filename
     return this.culinaryService.createCulinary(createdId, dto)
   }
 

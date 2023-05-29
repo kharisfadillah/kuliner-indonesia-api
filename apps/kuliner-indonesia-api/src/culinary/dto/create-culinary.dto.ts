@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator'
 
@@ -8,14 +8,21 @@ export class CreateCulinaryDto {
   @IsNotEmpty()
   name: string
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsString()
   @IsOptional()
   description: string
+
+  @IsString()
+  @IsOptional()
+  image: string
 
   @ApiProperty()
   @Type(() => Number)
   @IsNumber()
   @IsNotEmpty()
   provinceId: number
+
+  @ApiPropertyOptional({ name: 'image', type: 'string', format: 'binary' })
+  imageFile: any
 }
