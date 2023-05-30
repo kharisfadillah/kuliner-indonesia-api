@@ -1,35 +1,47 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateCulinaryDto, EditCulinaryDto } from './dto'
+import { Request } from 'express'
 
 @Injectable()
 export class CulinaryService {
   constructor(private prisma: PrismaService) {}
 
-  async getCulinaries() {
+  async getCulinaries(req: Request) {
     const culinaries = await this.prisma.culinary.findMany()
-    return culinaries
+    return culinaries.map((culinary) => {
+      return {
+        ...culinary,
+        image: `${req.protocol}://${req.headers.host}/images/${encodeURIComponent(culinary.image)}`,
+      }
+    })
   }
 
-  async getCulinaryById(culinaryId: number) {
+  async getCulinaryById(culinaryId: number, req: Request) {
     const culinary = await this.prisma.culinary.findFirst({
       where: {
         id: culinaryId,
       },
     })
+    culinary.image = `${req.protocol}://${req.headers.host}/images/${encodeURIComponent(culinary.image)}`
     return culinary
   }
 
-  async getCulinariesByProvince(provinceId: number) {
+  async getCulinariesByProvince(provinceId: number, req: Request) {
     const culinaries = await this.prisma.culinary.findMany({
       where: {
         provinceId: provinceId,
       },
     })
-    return culinaries
+    return culinaries.map((culinary) => {
+      return {
+        ...culinary,
+        image: `${req.protocol}://${req.headers.host}/images/${encodeURIComponent(culinary.image)}`,
+      }
+    })
   }
 
-  async createCulinary(createdId: number, dto: CreateCulinaryDto) {
+  async createCulinary(createdId: number, dto: CreateCulinaryDto, req: Request) {
     const province = await this.prisma.province.findUnique({
       where: {
         id: dto.provinceId,
@@ -45,11 +57,11 @@ export class CulinaryService {
         ...dto,
       },
     })
-
+    culinary.image = `${req.protocol}://${req.headers.host}/images/${encodeURIComponent(culinary.image)}`
     return culinary
   }
 
-  async editCulinary(updatedId: number, culinaryId: number, dto: EditCulinaryDto) {
+  async editCulinary(updatedId: number, culinaryId: number, dto: EditCulinaryDto, req: Request) {
     if (dto.provinceId != null) {
       const province = await this.prisma.province.findUnique({
         where: {
@@ -60,7 +72,7 @@ export class CulinaryService {
       if (!province) throw new ForbiddenException('province not found')
     }
 
-    return this.prisma.culinary.update({
+    const culinary = await this.prisma.culinary.update({
       where: {
         id: culinaryId,
       },
@@ -69,6 +81,10 @@ export class CulinaryService {
         ...dto,
       },
     })
+
+    culinary.image = `${req.protocol}://${req.headers.host}/images/${encodeURIComponent(culinary.image)}`
+
+    return culinary
   }
 
   async deleteCulinaryById(culinaryId: number) {

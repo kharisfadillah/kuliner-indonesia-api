@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Req,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -17,10 +18,11 @@ import { GetUser } from '../auth/decorator'
 import { JwtGuard } from '../auth/guard'
 import { CulinaryService } from './culinary.service'
 import { CreateCulinaryDto, EditCulinaryDto } from './dto'
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer'
 import { join } from 'path'
+import { Request } from 'express'
 
 @ApiTags('Culinary')
 @ApiBearerAuth()
@@ -30,18 +32,19 @@ export class CulinaryController {
   constructor(private culinaryService: CulinaryService) {}
 
   @Get()
-  getCulinaries() {
-    return this.culinaryService.getCulinaries()
+  getCulinaries(@Req() req: Request) {
+    console.log(req.user)
+    return this.culinaryService.getCulinaries(req)
   }
 
   @Get(':id')
-  getCulinaryById(@Param('id', ParseIntPipe) culinaryId: number) {
-    return this.culinaryService.getCulinaryById(culinaryId)
+  getCulinaryById(@Param('id', ParseIntPipe) culinaryId: number, @Req() req: Request) {
+    return this.culinaryService.getCulinaryById(culinaryId, req)
   }
 
   @Get('province/:id')
-  getCulinariesByProvince(@Param('id', ParseIntPipe) provinceId: number) {
-    return this.culinaryService.getCulinariesByProvince(provinceId)
+  getCulinariesByProvince(@Param('id', ParseIntPipe) provinceId: number, @Req() req: Request) {
+    return this.culinaryService.getCulinariesByProvince(provinceId, req)
   }
 
   @Post()
@@ -61,10 +64,11 @@ export class CulinaryController {
     @GetUser('id') createdId: number,
     @Body() dto: CreateCulinaryDto,
     @UploadedFile() image: Express.Multer.File,
+    @Req() req: Request,
   ) {
     console.log(image)
     dto.image = image.filename
-    return this.culinaryService.createCulinary(createdId, dto)
+    return this.culinaryService.createCulinary(createdId, dto, req)
   }
 
   @Patch(':id')
@@ -72,8 +76,9 @@ export class CulinaryController {
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) culinaryId: number,
     @Body() dto: EditCulinaryDto,
+    @Req() req: Request,
   ) {
-    return this.culinaryService.editCulinary(userId, culinaryId, dto)
+    return this.culinaryService.editCulinary(userId, culinaryId, dto, req)
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
